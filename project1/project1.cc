@@ -1,4 +1,5 @@
 #include <iostream>
+#include <list>
 
 using namespace std;
 
@@ -15,6 +16,17 @@ int main(){
 	//If the user inputs a non-integer value, it will be truncated, and if no
 	//input is given, the program will not continue, so the "Nan" and "Missing
 	//Argument" messages are unnecessary.
+
+	//Initializes list of integers
+	list<int> l = {2};
+	for(int i = 3; i < n; i++){
+		//Adds all integers in the specified range to the list
+		l.push_back(i);
+	}
+	list<int> primes;
+	while(l.begin() < sqrt(n)){
+		
+	}
 
 	return 0;
 }
