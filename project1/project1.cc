@@ -24,6 +24,7 @@ int main(){
 		l.push_back(i);
 	}
 	list<int> primes;
+	list<int> iterator it = l.begin();
 	while(l.begin() < sqrt(n)){
 		
 	}
