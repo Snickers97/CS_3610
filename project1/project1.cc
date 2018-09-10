@@ -26,7 +26,7 @@ int main(){
 		isprime[i] = true;
 	}
 	//Set 2 as the first value of p
-	for(int p = 2; p*p < n; p++){
+	for(int p = 2; p*p <= n; p++){
 		if(isprime[p]){
 			//For each prime, iterate through array and mark multiples of p as
 			//composite
