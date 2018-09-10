@@ -1,3 +1,10 @@
+/***********************************
+Written by Jacob Handley for CS 3610 Fall 2018
+This program implements the Sieve of Eratosthenes, which identifies all prime
+numbers up to to the maximum input.
+Last edited 9/9/2018
+**********************************/
+
 #include <iostream>
 
 using namespace std;
