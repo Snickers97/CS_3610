@@ -1,0 +1,44 @@
+int singleparent(node *ptr){
+    int count = 0;
+    if(ptr == NULL)
+        return count;
+    if(ptr->left == NULL && ptr->right == NULL)
+        return count;
+    else if(ptr->right == NULL){
+        count++;
+        return count + singleparent(ptr->left);
+    }
+    else if(ptr->left == NULL){
+        count++;
+        return count + singleparent(ptr->right);
+    }
+    else{
+        count += singleparent(ptr->left);
+        count += singleparent(ptr->right);
+    }
+    return count;
+}
+
+int singleP_iterative(node *ptr){
+    if(ptr == NULL)
+        return 0;
+    node *current = ptr;
+    stack<node *> s;
+    int count = 0;
+    while(current != NULL || !s.empty()){
+        if(current != NULL){
+            s.push(current);
+            current = current->left;
+        }
+        else{
+            current = s.top();
+            s.pop();
+            if(current->left != NULL && current-> right == NULL)
+                count++;
+            if(current->left == NULL && current-> right != NULL)
+                count++;
+            current = current->right;
+        }
+    }
+    return count;
+}

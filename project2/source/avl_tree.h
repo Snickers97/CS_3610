@@ -43,6 +43,8 @@ private:
     void print_height(BinaryNode* node);
     //Return the height of the node
     int height(BinaryNode* node);
+    //Balance the tree at this node
+    void balance(BinaryNode* node);
 
     BinaryNode* root;
 };

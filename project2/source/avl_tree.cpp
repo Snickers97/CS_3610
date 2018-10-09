@@ -59,7 +59,10 @@ BinaryNode* AVLTree::insert(const int key, BinaryNode* node) {
             node->right = insert(key, node->right);
         }
     }
-    if(abs(height(node->left) - height()))
+    //Need to re-balance the tree if subtree heights differ by more than 1
+    if(abs(height(node->left) - height(node->right)) > 1){
+        balance(node);
+    }
 
     return node;
 
@@ -89,7 +92,7 @@ int AVLTree::height(BinaryNode* node){
     if(node == NULL)
         return 0;
     int h = 1;
-    //If node has no chlidren, its height is 1
+    //If node has no children, its height is 1
     if(node->left == NULL && node->right == NULL)
         return h;
     //If node only has one child, its height is 1 + child height
@@ -100,5 +103,16 @@ int AVLTree::height(BinaryNode* node){
     //If node has two children, its height is 1 + height of the tallest child
     else{
         return h + max(height(node->left), height(node->right));
+    }
+}
+
+void AVLTree::balance(BinaryNode* node){
+    if(height(node->left) > height(node->right)){
+        BinaryNode* ptr = node->left;
+        ptr->right = node;
+    }
+    else{
+        BinaryNode* ptr = node->right;
+        ptr->left = node;
     }
 }
