@@ -43,8 +43,16 @@ private:
     void print_height(BinaryNode* node);
     //Return the height of the node
     int height(BinaryNode* node);
-    //Balance the tree at this node
-    void balance(BinaryNode* node);
+    //Rotate left at this node
+    BinaryNode* rotate_left(BinaryNode* node);
+    //Rotate right at this node
+    BinaryNode* rotate_right(BinaryNode* node);
+    //Remove the node with key value
+    BinaryNode* remove_node(const int key, BinaryNode* node);
+    //Balance from the left
+    BinaryNode* balance_left(BinaryNode* node);
+    //Balance from the right
+    BinaryNode* balance_right(BinaryNode* node);
 
     BinaryNode* root;
 };

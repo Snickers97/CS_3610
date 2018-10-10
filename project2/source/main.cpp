@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
                 break;
             case 'r':
                 cin >> key;
-                // tree.remove(key);
+                 tree.remove(key);
                 break;
             case 'h':
                 tree.print('h');

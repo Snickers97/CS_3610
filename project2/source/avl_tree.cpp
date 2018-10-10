@@ -10,7 +10,7 @@ void AVLTree::insert(const int key) {
 
 //The public remove function; calls the recursive remove function
 void AVLTree::remove(const int key){
-    //this->root = remove(key, this->root);
+    this->root = remove_node(key, this->root);
 }
 
 //The public print function
@@ -43,25 +43,19 @@ BinaryNode* AVLTree::insert(const int key, BinaryNode* node) {
         return node;
     //Key is less than current node, move to left node
     if(key < node->key) {
-        if(node->left == NULL) {
-            node->left = new BinaryNode(key);
-        }
-        else {
-            node->left = insert(key, node->left);
+        node->left = insert(key, node->left);
+        //Balance from the left
+        if((height(node->left) - height(node->right)) > 1){
+            node = balance_left(node);
         }
     }
     //Key is greater than current node, move to right node
     else {
-        if(node->right == NULL) {
-            node->right = new BinaryNode(key);
+        node->right = insert(key, node->right);
+        //Balance from the right
+        if((height(node->right) - height(node->left)) > 1){
+            node = balance_right(node);
         }
-        else{
-            node->right = insert(key, node->right);
-        }
-    }
-    //Need to re-balance the tree if subtree heights differ by more than 1
-    if(abs(height(node->left) - height(node->right)) > 1){
-        balance(node);
     }
 
     return node;
@@ -106,13 +100,129 @@ int AVLTree::height(BinaryNode* node){
     }
 }
 
-void AVLTree::balance(BinaryNode* node){
-    if(height(node->left) > height(node->right)){
-        BinaryNode* ptr = node->left;
-        ptr->right = node;
-    }
+//Rotate left at node
+BinaryNode* AVLTree::rotate_left(BinaryNode* node){
+    if(node == NULL || node->right == NULL)
+        cout<<"Error"<<endl;
     else{
         BinaryNode* ptr = node->right;
+        node->right = ptr->left;
         ptr->left = node;
+        node = ptr;
+        return node;
     }
+}
+
+//Rotate right at node
+BinaryNode* AVLTree::rotate_right(BinaryNode* node){
+    if(node == NULL || node->left == NULL)
+        cout<<"Error"<<endl;
+    else{
+        BinaryNode* ptr = node->left;
+        node->left = ptr->right;
+        ptr->right = node;
+        node = ptr;
+        return node;
+    }
+}
+
+//Remove the node with key value
+BinaryNode* AVLTree::remove_node(const int key, BinaryNode* node){
+    //edge case
+    if(node == NULL)
+        return NULL;
+    //Node is found, delete it
+    if(node->key == key){
+        if(node->left==NULL && node->right==NULL){
+            delete node;
+            return NULL;
+        }
+        else if(node->right == NULL){
+            node = node->left;
+            delete node->left;
+            return node;
+        }
+        else if(node->left == NULL){
+            node = node->right;
+            delete node->right;
+            return node;
+        }
+        else{
+            if(height(node->right) >= height(node->left)){
+                BinaryNode* ptr = node->right;
+                BinaryNode* prev = node;
+                while(ptr->left != NULL){
+                    prev = ptr;
+                    ptr = ptr->left;
+                }
+                if(prev == node){
+                    BinaryNode* tmp = node->left;
+                    node = ptr;
+                    node->left = tmp;
+                }
+                else{
+                    node->key = ptr->key;
+                    prev->left = NULL;
+                }
+            }
+            else{
+                BinaryNode* ptr = node->left;
+                BinaryNode* prev = node;
+                while(ptr->right != NULL){
+                    prev = ptr;
+                    ptr = ptr->right;
+                }
+                if(prev == node){
+                    BinaryNode* tmp = node->right;
+                    node = ptr;
+                    node->right = tmp;
+                }
+                else{
+                    node->key = ptr->key;
+                    prev->right = NULL;
+                }
+            }
+        }
+    }
+    else if(key < node->key && node->left != NULL){
+        node->left = remove_node(key, node->left);
+    }
+    else if(key > node->key && node->right != NULL){
+        node->right = remove_node(key, node->right);
+    }
+    //Balance from the left
+    if((height(node->left) - height(node->right)) > 1){
+        node = balance_left(node);
+    }
+    //Balance from the right
+    if((height(node->right) - height(node->left)) > 1){
+        node = balance_right(node);
+    }
+    return node;
+}
+
+BinaryNode* AVLTree::balance_left(BinaryNode* node){
+    BinaryNode* ptr = node->left;
+    if((height(ptr->left) - height(ptr->right) > 1)){
+        node = rotate_right(node);
+    }
+    else if((height(ptr->right) - height(ptr->left)) > 1){
+        ptr = rotate_left(ptr);
+        node->left = ptr;
+        node = rotate_right(node);
+    }
+    return node;
+}
+
+BinaryNode* AVLTree::balance_right(BinaryNode* node){
+    BinaryNode* ptr = node->right;
+    if((height(node->right) - height(node->left)) > 1){
+        node = rotate_left(node);
+    }
+    else if((height(node->left) - height(node->right)) > 1){
+        ptr = rotate_right(ptr);
+        node->right = ptr;
+        node = rotate_left(node);
+    }
+    return node;
 }
