@@ -1,0 +1,49 @@
+Problem 1:
+
+int leafcount(binaryTreeNode* root){
+    if(root == NULL)
+        return 0;
+    else if(root->llink == NULL && root->rlink == NULL)
+        return 1;
+    else if(root->rlink == NULL)
+        return leafcount(root->llink);
+    else if(root->llink == NULL)
+        return leafcount(root->rlink);
+    else{
+        return leafcount(root->llink) + leafcount(root->rlink);
+    }
+    return 0;
+}
+
+int nr_leafcount(binaryTreeNode* root){
+    binaryTreeNode* ptr = root;
+    stack<binaryTreeNode*> s;
+    int count = 0;
+    while(ptr != NULL || !s.empty()){
+        if(ptr != NULL){
+            s.push(ptr);
+            ptr = ptr->llink;
+        }
+        else{
+            ptr = s.top();
+            if(ptr->llink == NULL && ptr->rlink == NULL)
+                count++;
+            s.pop();
+            ptr = ptr->rlink;
+        }
+    }
+    return count;
+}
+
+
+Last Problem:
+
+int r_seqsearch(vector<int> nums, int loc, int item){
+    if(loc == nums.size())
+        return -1;
+    if(nums[loc] == item)
+        return loc;
+    else
+        return r_seqsearch(nums, loc+1, item);
+
+}

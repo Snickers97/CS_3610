@@ -57,6 +57,14 @@ BinaryNode* AVLTree::insert(const int key, BinaryNode* node) {
             node = balance_right(node);
         }
     }
+    //Balance from the left
+    if((height(node->left) - height(node->right)) > 1){
+        node = balance_left(node);
+    }
+    //Balance from the right
+    if((height(node->right) - height(node->left)) > 1){
+        node = balance_right(node);
+    }
 
     return node;
 
@@ -127,6 +135,7 @@ BinaryNode* AVLTree::rotate_right(BinaryNode* node){
 }
 
 //Remove the node with key value
+//Warning: this function is horrifically ugly. It works but don't look at it
 BinaryNode* AVLTree::remove_node(const int key, BinaryNode* node){
     //edge case
     if(node == NULL)
@@ -147,25 +156,27 @@ BinaryNode* AVLTree::remove_node(const int key, BinaryNode* node){
             delete node->right;
             return node;
         }
-        else{
+        else{ //Node to be removed has two children. The complex case
+            //I checked for this to prevent the tree from getting lopsided
+            //after multiple deletions of the root
             if(height(node->right) >= height(node->left)){
                 BinaryNode* ptr = node->right;
                 BinaryNode* prev = node;
-                while(ptr->left != NULL){
+                while(ptr->left != NULL){ //find the inorder successor of node
                     prev = ptr;
                     ptr = ptr->left;
                 }
-                if(prev == node){
+                if(prev == node){ //in this case, successor is right after node
                     BinaryNode* tmp = node->left;
                     node = ptr;
                     node->left = tmp;
                 }
-                else{
+                else{ //usual case, successor is farther down the tree
                     node->key = ptr->key;
                     prev->left = NULL;
                 }
             }
-            else{
+            else{ //same as line 154 but sides are reversed
                 BinaryNode* ptr = node->left;
                 BinaryNode* prev = node;
                 while(ptr->right != NULL){
@@ -184,10 +195,10 @@ BinaryNode* AVLTree::remove_node(const int key, BinaryNode* node){
             }
         }
     }
-    else if(key < node->key && node->left != NULL){
+    else if(key < node->key && node->left != NULL){ //Not the node; go left
         node->left = remove_node(key, node->left);
     }
-    else if(key > node->key && node->right != NULL){
+    else if(key > node->key && node->right != NULL){ //Not the node; go right
         node->right = remove_node(key, node->right);
     }
     //Balance from the left
@@ -201,6 +212,7 @@ BinaryNode* AVLTree::remove_node(const int key, BinaryNode* node){
     return node;
 }
 
+//Balances the tree from the left
 BinaryNode* AVLTree::balance_left(BinaryNode* node){
     BinaryNode* ptr = node->left;
     if((height(ptr->left) - height(ptr->right) > 1)){
@@ -214,6 +226,7 @@ BinaryNode* AVLTree::balance_left(BinaryNode* node){
     return node;
 }
 
+//Balances the tree from the right
 BinaryNode* AVLTree::balance_right(BinaryNode* node){
     BinaryNode* ptr = node->right;
     if((height(node->right) - height(node->left)) > 1){
